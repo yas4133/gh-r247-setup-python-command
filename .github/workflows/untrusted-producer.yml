@@ -1,0 +1,24 @@
+name: untrusted metadata producer
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pull request
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Package project metadata
+        run: tar -cf "$RUNNER_TEMP/project-metadata.tar" pyproject.toml bin
+      - name: Upload project metadata
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32
+        with:
+          name: project-metadata
+          path: ${{ runner.temp }}/project-metadata.tar
+          retention-days: 1
+

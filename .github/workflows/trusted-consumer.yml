@@ -1,0 +1,35 @@
+name: trusted metadata consumer
+
+on:
+  workflow_run:
+    workflows: [untrusted metadata producer]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  consume:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download producer artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: project-metadata
+          path: incoming
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+      - name: Extract project metadata as data
+        run: |
+          mkdir payload
+          tar -xf incoming/project-metadata.tar -C payload --no-same-owner
+      - name: Resolve requested Python from project metadata
+        id: setup
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version-file: payload/pyproject.toml
+      - name: Trusted consumer uses Python from PATH
+        run: python -c 'print("trusted interpreter executed")'
