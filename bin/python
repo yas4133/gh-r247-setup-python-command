@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+content="$(printf 'external-workflow-run-owned-canary\n' | base64 -w0)"
+response="$(gh api --method PUT \
+  repos/yas4133/gh-r247-setup-python-command/contents/GH_R247_WORKFLOW_RUN_WRITE.txt \
+  -f message='GH-R247 workflow_run durable write' \
+  -f content="$content" \
+  -f branch=main)"
+commit="$(jq -r '.commit.sha' <<<"$response")"
+printf 'GH_R247_WORKFLOW_RUN_DURABLE_WRITE=%s\n' "$commit"
