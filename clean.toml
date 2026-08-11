@@ -1,0 +1,4 @@
+[project]
+name = "gh-r247-clean-control"
+version = "0.0.1"
+requires-python = "not-a-version"
