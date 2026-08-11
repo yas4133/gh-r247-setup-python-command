@@ -31,5 +31,7 @@ jobs:
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version-file: payload/pyproject.toml
-      - name: Trusted consumer uses Python from PATH
-        run: python -c 'print("trusted interpreter executed")'
+      - name: Trusted consumer invokes documented interpreter output
+        env:
+          PYTHON_FROM_ACTION: ${{ steps.setup.outputs.python-path }}
+        run: "$PYTHON_FROM_ACTION" -c 'print("trusted interpreter executed")'
