@@ -1,0 +1,29 @@
+name: setup-python workflow-command canary
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Parse attacker-controlled TOML version metadata
+        id: setup
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version-file: pyproject.toml
+      - name: Record harmless command result
+        env:
+          OBSERVED_PYTHON_PATH: ${{ steps.setup.outputs.python-path }}
+        run: |
+          printf 'OUTPUT_START=%s\n' "$OBSERVED_PYTHON_PATH"
+          printf 'MASK_CONTROL=%s\n' 'GH_R247_MASK'
+          if [[ "$OBSERVED_PYTHON_PATH" == GH_R247_INJECTED* ]]; then
+            printf 'GH_R247_SET_OUTPUT_ACCEPTED=true\n'
+          else
+            printf 'GH_R247_SET_OUTPUT_ACCEPTED=false\n'
+          fi
