@@ -34,4 +34,5 @@ jobs:
       - name: Trusted consumer invokes documented interpreter output
         env:
           PYTHON_FROM_ACTION: ${{ steps.setup.outputs.python-path }}
-        run: "$PYTHON_FROM_ACTION" -c 'print("trusted interpreter executed")'
+        run: |
+          "$PYTHON_FROM_ACTION" -c 'print("trusted interpreter executed")'
