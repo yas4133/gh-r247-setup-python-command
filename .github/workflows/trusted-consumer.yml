@@ -34,5 +34,6 @@ jobs:
       - name: Trusted consumer invokes documented interpreter output
         env:
           PYTHON_FROM_ACTION: ${{ steps.setup.outputs.python-path }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           "$PYTHON_FROM_ACTION" -c 'print("trusted interpreter executed")'
